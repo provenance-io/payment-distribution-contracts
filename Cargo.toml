@@ -1,11 +1,11 @@
 [package]
-name = "bilateral-exchange"
+name = "payment-distribution-contracts"
 version = "1.0.0-beta"
-authors = ["Ken Talley <ktalley@figure.com>"]
+authors = ["Anthony Fremuth <afremuth@figure.com>","John Louie <jlouie@figure.com>"]
 edition = "2018"
 
 exclude = [
-  "bilateral_exchange.wasm",
+  "payment-distribution-contracts.wasm",
   "checksums.txt",
 ]
 

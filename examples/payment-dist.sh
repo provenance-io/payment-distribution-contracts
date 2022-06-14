@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 printf "\n...store wasm...\n"
-build/provenanced tx wasm store bilateral_exchange.wasm \
+build/provenanced tx wasm store payment-distribution-contracts.wasm \
   --from validator \
   --keyring-backend test \
   --home build/run/provenanced \
@@ -12,7 +12,7 @@ build/provenanced tx wasm store bilateral_exchange.wasm \
   --testnet
 
 printf "\n...instantiate contract...\n"
-build/provenanced tx wasm instantiate 1 '{"bind_name":"bilateral-ex.sc","contract_name":"bilateral-ex"}' \
+build/provenanced tx wasm instantiate 1 '{"bind_name":"payment-dist.sc","contract_name":"payment-dist"}' \
   --admin "$(build/provenanced keys show -ta validator --home build/run/provenanced --keyring-backend test)" \
   --from validator \
   --keyring-backend test \
@@ -35,12 +35,12 @@ build/provenanced query bank balances "$(build/provenanced keys show seller -at 
   --testnet
 
 printf "\n...contract balance...\n"
-build/provenanced query bank balances "$(provenanced q name resolve bilateral-ex.sc --testnet | awk '{print $2}')" \
+build/provenanced query bank balances "$(provenanced q name resolve payment-dist.sc --testnet | awk '{print $2}')" \
   --home build/run/provenanced \
   --testnet
 
 printf "\n...seller creating ask...\n"
-build/provenanced tx wasm execute "$(provenanced q name resolve bilateral-ex.sc --testnet | awk '{print $2}')" \
+build/provenanced tx wasm execute "$(provenanced q name resolve payment-dist.sc --testnet | awk '{print $2}')" \
   '{"create_ask":{"id":"ask_id", "quote":[{"amount":"8", "denom":"usd"}]}}' \
   --amount 1gme \
   --from "$(build/provenanced keys show -ta seller --home build/run/provenanced --keyring-backend test)" \
@@ -53,7 +53,7 @@ build/provenanced tx wasm execute "$(provenanced q name resolve bilateral-ex.sc 
   --testnet
 
 printf "\n...buyer creating bid...\n";
-build/provenanced tx wasm execute "$(provenanced q name resolve bilateral-ex.sc --testnet | awk '{print $2}')" \
+build/provenanced tx wasm execute "$(provenanced q name resolve payment-dist.sc --testnet | awk '{print $2}')" \
   '{"create_bid":{"id":"bid_id", "base":[{"amount":"1", "denom":"gme"}]}}' \
   --amount 8usd \
   --from "$(build/provenanced keys show -ta buyer --home build/run/provenanced --keyring-backend test)" \
@@ -77,30 +77,30 @@ build/provenanced query bank balances "$(build/provenanced keys show seller -at 
   --testnet
 
 printf "\n...contract balance...\n";
-build/provenanced query bank balances "$(provenanced q name resolve bilateral-ex.sc --testnet | awk '{print $2}')" \
+build/provenanced query bank balances "$(provenanced q name resolve payment-dist.sc --testnet | awk '{print $2}')" \
   --home build/run/provenanced \
   --testnet
 
 printf "\n...ask order info...\n";
-build/provenanced query wasm contract-state smart "$(provenanced q name resolve bilateral-ex.sc --testnet | awk '{print $2}')" \
+build/provenanced query wasm contract-state smart "$(provenanced q name resolve payment-dist.sc --testnet | awk '{print $2}')" \
   '{"get_ask":{"id":"ask_id"}}' \
   --ascii \
   --testnet
 
 printf "\n...bid order info...\n";
-build/provenanced query wasm contract-state smart "$(provenanced q name resolve bilateral-ex.sc --testnet | awk '{print $2}')" \
+build/provenanced query wasm contract-state smart "$(provenanced q name resolve payment-dist.sc --testnet | awk '{print $2}')" \
   '{"get_bid":{"id":"bid_id"}}' \
   --ascii \
   --testnet
 
 printf "\n...contract info...\n";
 build/provenanced query wasm contract-state smart \
-  "$(provenanced q name resolve bilateral-ex.sc --testnet | awk '{print $2}')" \
+  "$(provenanced q name resolve payment-dist.sc --testnet | awk '{print $2}')" \
   '{"get_contract_info":{}}' \
   --testnet
 
 printf "\n...executing match...\n";
-build/provenanced tx wasm execute "$(provenanced q name resolve bilateral-ex.sc --testnet | awk '{print $2}')" \
+build/provenanced tx wasm execute "$(provenanced q name resolve payment-dist.sc --testnet | awk '{print $2}')" \
   '{"execute_match":{"ask_id":"ask_id", "bid_id":"bid_id"}}' \
   --from validator \
   --keyring-backend test \
@@ -122,12 +122,12 @@ build/provenanced query bank balances "$(build/provenanced keys show seller -at 
   --testnet
 
 printf "\n...contract balance...\n";
-build/provenanced query bank balances "$(provenanced q name resolve bilateral-ex.sc --testnet | awk '{print $2}')" \
+build/provenanced query bank balances "$(provenanced q name resolve payment-dist.sc --testnet | awk '{print $2}')" \
   --home build/run/provenanced \
   --testnet
 
 printf "\n...seller creating ask...\n";
-build/provenanced tx wasm execute "$(provenanced q name resolve bilateral-ex.sc --testnet | awk '{print $2}')" \
+build/provenanced tx wasm execute "$(provenanced q name resolve payment-dist.sc --testnet | awk '{print $2}')" \
   '{"create_ask":{"id":"ask_id", "quote":[{"amount":"8", "denom":"usd"}]}}' \
   --amount 1gme \
   --from "$(build/provenanced keys show -ta seller --home build/run/provenanced --keyring-backend test)" \
@@ -140,7 +140,7 @@ build/provenanced tx wasm execute "$(provenanced q name resolve bilateral-ex.sc 
   --testnet
 
 printf "\n...seller canceling ask...\n";
-build/provenanced tx wasm execute "$(provenanced q name resolve bilateral-ex.sc --testnet | awk '{print $2}')" \
+build/provenanced tx wasm execute "$(provenanced q name resolve payment-dist.sc --testnet | awk '{print $2}')" \
   '{"cancel_ask":{"id":"ask_id"}}' \
   --from "$(build/provenanced keys show -ta seller --home build/run/provenanced --keyring-backend test)" \
   --keyring-backend test \

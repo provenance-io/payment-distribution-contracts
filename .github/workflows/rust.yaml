@@ -1,4 +1,4 @@
-name: bilateral-exchange
+name: payment-distribution-contracts
 
 on:
   push:
