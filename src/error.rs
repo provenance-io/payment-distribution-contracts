@@ -3,6 +3,9 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum ContractError {
+    #[error("Distribution amount was not provided")]
+    MissingAmount,
+
     #[error("Ask Order does not match Bid Order")]
     AskBidMismatch {},
 
