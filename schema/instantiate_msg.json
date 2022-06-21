@@ -4,17 +4,13 @@
   "type": "object",
   "required": [
     "bind_name",
-    "contract_name",
-    "payment_marker"
+    "contract_name"
   ],
   "properties": {
     "bind_name": {
       "type": "string"
     },
     "contract_name": {
-      "type": "string"
-    },
-    "payment_marker": {
       "type": "string"
     }
   }

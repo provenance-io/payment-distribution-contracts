@@ -11,10 +11,7 @@ pub struct InstantiateMsg {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum ExecuteMsg {
-    DistributePayment {
-        amount: Coin,
-    },
-   /*  CancelAsk {
+    CancelAsk {
         id: String,
     },
     CancelBid {
@@ -32,7 +29,7 @@ pub enum ExecuteMsg {
     ExecuteMatch {
         ask_id: String,
         bid_id: String,
-    }, */
+    },
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

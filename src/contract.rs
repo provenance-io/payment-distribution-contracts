@@ -32,7 +32,7 @@ pub fn instantiate(
     }
 
     // set contract info
-    let contract_info = ContractInfo::new(info.sender, msg.bind_name, msg.contract_name, msg.payment_marker);
+    let contract_info = ContractInfo::new(info.sender, msg.bind_name, msg.contract_name);
     set_contract_info(deps.storage, &contract_info)?;
 
     // create name binding provenance message
@@ -63,9 +63,7 @@ pub fn execute(
     msg: ExecuteMsg,
 ) -> Result<Response<ProvenanceMsg>, ContractError> {
     match msg {
-        ExecuteMsg::DistributePayment { amount} => distribute_payment(deps, info, amount),
-
-        /* ExecuteMsg::CreateAsk { id, quote } => create_ask(deps, info, id, quote),
+        ExecuteMsg::CreateAsk { id, quote } => create_ask(deps, info, id, quote),
         ExecuteMsg::CreateBid {
             id,
             base,
@@ -75,74 +73,9 @@ pub fn execute(
         ExecuteMsg::CancelBid { id } => cancel_bid(deps, env, info, id),
         ExecuteMsg::ExecuteMatch { ask_id, bid_id } => {
             execute_match(deps, env, info, ask_id, bid_id)
-        } */
+        }
     }
 }
-
-// match and execute an ask and bid order
-fn distribute_payment(
-    deps: DepsMut<ProvenanceQuery>,
-    info: MessageInfo,
-    amount: Coin,
-) -> Result<Response<ProvenanceMsg>, ContractError> {
-    // only the admin may execute matches
-    if info.sender != get_contract_info(deps.storage)?.admin {
-        return Err(ContractError::Unauthorized {});
-    }
-
-    if amount.is_empty() {
-        return Err(ContractError::MissingAmount);
-    }
-
-    // todo (fetch all addresses that own a non-zero amount of the marker)
-    // todo (for each address, call function to return payment amount based on percentage of marker owned and amount to distribute)
-    // todo (BankMsg::Send to each owner the payment amount determined)
-
-
-    /***** COMMENTED OUT FROM BI-LATERAL EXCHANGE ******
-
-    let ask_storage_read = get_ask_storage_read(deps.storage);
-    let ask_order_result = ask_storage_read.load(ask_id.as_bytes());
-    if ask_order_result.is_err() {
-        return Err(ContractError::AskBidMismatch {});
-    }
-
-    let bid_storage_read = get_bid_storage_read(deps.storage);
-    let bid_order_result = bid_storage_read.load(bid_id.as_bytes());
-    if bid_order_result.is_err() {
-        return Err(ContractError::AskBidMismatch {});
-    }
-
-    let ask_order = ask_order_result.unwrap();
-    let bid_order = bid_order_result.unwrap();
-
-    if !is_executable(&ask_order, &bid_order) {
-        return Err(ContractError::AskBidMismatch {});
-    }
-
-    // 'send quote to asker' and 'send base to bidder' messages
-    let response = Response::new()
-        .add_messages(vec![
-            BankMsg::Send {
-                to_address: ask_order.owner.to_string(),
-                amount: ask_order.quote,
-            },
-            BankMsg::Send {
-                to_address: bid_order.owner.to_string(),
-                amount: bid_order.base,
-            },
-        ])
-        .add_attributes(vec![attr("action", "execute")]);
-
-    // finally remove the orders from storage
-    get_ask_storage(deps.storage).remove(ask_id.as_bytes());
-    get_bid_storage(deps.storage).remove(bid_id.as_bytes());
-    */
-
-    Ok(response)
-}
-
-/***** COMMENTED OUT FROM BI-LATERAL EXCHANGE ******
 
 // create ask entrypoint
 fn create_ask(
@@ -360,7 +293,6 @@ fn execute_match(
 
     Ok(response)
 }
-*/
 
 fn is_executable(ask_order: &AskOrder, bid_order: &BidOrder) -> bool {
     // sort the base and quote vectors by the order chain: denom, amount

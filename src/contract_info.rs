@@ -18,18 +18,16 @@ pub struct ContractInfo {
     pub contract_name: String,
     pub contract_type: String,
     pub contract_version: String,
-    pub payment_marker: String
 }
 
 impl ContractInfo {
-    pub fn new(admin: Addr, bind_name: String, contract_name: String, payment_marker: String) -> ContractInfo {
+    pub fn new(admin: Addr, bind_name: String, contract_name: String) -> ContractInfo {
         ContractInfo {
             admin,
             bind_name,
             contract_name,
             contract_type: CONTRACT_TYPE.into(),
             contract_version: CONTRACT_VERSION.into(),
-            payment_marker
         }
     }
 }
